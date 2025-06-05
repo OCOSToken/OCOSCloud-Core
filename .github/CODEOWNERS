@@ -1,0 +1,36 @@
+# 👑 CODEOWNERS for OCOS Cloud
+
+# This file defines who owns what parts of the repository.
+# It enables automatic PR review requests and governance alignment.
+
+# Root ownership for the whole repository
+*                  @ocoscore/047
+
+# Contract files
+/contracts/        @ocoscore/devs @ocoscore/auditors
+
+# Documentation
+/docs/             @ocoscore/docs @ocoscore/047
+
+# Deployment scripts and config
+/scripts/          @ocoscore/devops
+/hardhat.config.js @ocoscore/devops
+
+# SDK & API Gateway
+/sdk/              @ocoscore/sdk
+/api/              @ocoscore/sdk
+
+# Frontend (UI)
+/dashboard/        @ocoscore/frontend @ocoscore/devs
+
+# Test suite
+/test/             @ocoscore/devs @ocoscore/qa
+
+# Security & Governance
+SECURITY.md        @ocoscore/security
+CONTRIBUTING.md    @ocoscore/047
+access-control.md  @ocoscore/security
+
+# DAO Protocol Files
+/contracts/CloudDAO.sol     @ocoscore/dao
+/docs/deployment-guide.md   @ocoscore/devops
