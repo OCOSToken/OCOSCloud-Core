@@ -1,0 +1,78 @@
+analytics:
+  version: 1.0.0
+  project: OCOS Cloud
+  description: >
+    This file defines the data schema and query blueprint for OCOS Cloud analytics,
+    including node performance tracking, DAO governance activity, usage heatmaps,
+    and token economics monitoring.
+
+  sources:
+    - name: SmartContractEvents
+      type: onchain
+      contracts:
+        - ComputeBilling
+        - CloudDAO
+        - NodeRewardVault
+        - ComputeStaking
+
+    - name: NodeTelemetry
+      type: offchain
+      provider: Prometheus
+
+    - name: APIUsageLogs
+      type: gateway
+      endpoint: https://api.ocos.io/v1
+
+  dashboards:
+    - id: dao-governance
+      title: DAO Governance Overview
+      widgets:
+        - proposalCount
+        - voteParticipationRate
+        - quorumFailureTrend
+
+    - id: compute-performance
+      title: Compute Node Performance
+      widgets:
+        - avgSessionLength
+        - avgOCOSPerJob
+        - computeUtilizationRate
+
+    - id: staking-dynamics
+      title: Token Staking & Flow
+      widgets:
+        - totalStakedOCOS
+        - avgStakeDuration
+        - claimVsStakeRatio
+
+    - id: usage-heatmaps
+      title: User Activity Heatmaps
+      widgets:
+        - computeStartTimeHeatmap
+        - vaultUploadFrequency
+        - zkProofSubmissionTimeline
+
+    - id: token-economy
+      title: OCOS Token Metrics
+      widgets:
+        - circulatingSupply
+        - tokenVelocity
+        - rewardEmissionCurve
+
+  alerts:
+    - id: dao-anomaly
+      trigger: suddenVoteSpike
+      action: notifySecurity
+
+    - id: compute-outage
+      trigger: nodeDowntime > 5min
+      action: dispatchRecoveryScript
+
+    - id: zk-failure-rate
+      trigger: zkFailureRatio > 10%
+      action: pauseVerifierContract
+
+  retention:
+    nodeLogs: 90d
+    apiLogs: 30d
+    snapshots: monthly
