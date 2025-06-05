@@ -1,0 +1,54 @@
+alertEngine:
+  version: 1.0.0
+  system: OCOS Cloud
+  description: >
+    Configuration file for AlertEngine, defining alert triggers, thresholds, responses,
+    and notification channels for anomaly detection across OCOS Cloud nodes and governance systems.
+
+  triggers:
+    - id: latency-spike
+      metric: responseLatency
+      condition: "> 2000"
+      threshold: 3 consecutive samples
+      action: notify
+
+    - id: uptime-drop
+      metric: nodeUptimeRatio
+      condition: "< 90"
+      threshold: 2 blocks
+      action: flagForReview
+
+    - id: zk-failure-rate
+      metric: zkProofFailureRate
+      condition: "> 0.10"
+      threshold: 5 proofs
+      action: notifySecurity
+
+    - id: retry-burst
+      metric: jobRetryCount
+      condition: "> 10"
+      threshold: 1 sample
+      action: degradeNodeScore
+
+  responses:
+    notify:
+      channels:
+        - email: security@ocos.io
+        - webhook: https://alert.ocos.io/webhook
+
+    flagForReview:
+      escalation: DAO
+      pendingAction: voteOnNodeStatus
+
+    notifySecurity:
+      priority: high
+      handler: incident-response-team
+
+    degradeNodeScore:
+      contract: NodeRewardVault
+      function: applyPenalty(address node)
+
+  retention:
+    alertLogs: 90d
+    flaggedNodes: persistent
+    responseAudits: 365d
