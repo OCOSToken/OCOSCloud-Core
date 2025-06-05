@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: OCOS Cloud API
+  version: 1.0.0
+  description: |
+    This OpenAPI spec defines the REST endpoints for interacting with the OCOS Cloud infrastructure, including compute usage, staking, file vault, governance, and zk-proof systems.
+  contact:
+    email: dev@ocos.io
+
+servers:
+  - url: https://api.ocos.io/v1
+
+paths:
+  /compute/start:
+    post:
+      summary: Start compute session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                nodeId:
+                  type: integer
+      responses:
+        '200':
+          description: Compute session started
+  
+  /compute/end:
+    post:
+      summary: End compute session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                logId:
+                  type: integer
+      responses:
+        '200':
+          description: Session ended with billing details
+
+  /staking/stake:
+    post:
+      summary: Stake OCOS tokens for compute quota
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                amount:
+                  type: number
+                duration:
+                  type: integer
+      responses:
+        '200':
+          description: Stake confirmed
+
+  /vault/store:
+    post:
+      summary: Store encrypted file metadata
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cid:
+                  type: string
+                size:
+                  type: integer
+                encrypted:
+                  type: boolean
+      responses:
+        '200':
+          description: File metadata stored
+
+  /dao/proposal:
+    post:
+      summary: Submit a governance proposal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Proposal accepted
+
+  /proof/submit:
+    post:
+      summary: Submit zkCompute proof
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                taskId:
+                  type: integer
+                proofHash:
+                  type: string
+                publicSignals:
+                  type: string
+      responses:
+        '200':
+          description: Proof logged
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+security:
+  - BearerAuth: []
